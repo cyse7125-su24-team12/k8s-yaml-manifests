@@ -1,1 +1,7 @@
 # k8s
+
+Objects required for k8 used : 
+1. Config Map 
+2. Secret
+3. Pods 
+4. Services 
