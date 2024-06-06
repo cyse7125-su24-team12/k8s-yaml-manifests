@@ -9,13 +9,15 @@ spec:
   containers:
   - name: caddy-container 
     image: bala699/csye7125:latest
+    command: ["/bin/sh","-c"]
+    args: ["caddy run --config $CADDY_PATH"]
+    # command: ["echo $CADDY_PATH","caddy","run","--config","$CADDY_PATH","--adapter","caddyfile"]
     env: 
-     - name: IMAGE_NAME   
-       valueFrom:
-          configMapKeyRef:
-            name: caddy-config
-            key: IMAGE_NAME
-      
+    - name: CADDY_PATH   
+      valueFrom:
+        configMapKeyRef:
+          name: caddy-config
+          key: CADDY_PATH
     ports: 
       - name: http-port
         containerPort: 3500
@@ -39,6 +41,7 @@ spec:
       failureThreshold: 3
   imagePullSecrets:
     - name: team12-dockerhub-secret
+
 ---
 apiVersion: v1
 kind: Service
