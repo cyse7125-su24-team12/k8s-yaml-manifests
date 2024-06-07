@@ -11,7 +11,6 @@ spec:
       image: bala699/csye7125:latest
       command: ["/bin/sh", "-c"]
       args: ["caddy run --config $CADDY_PATH"]
-      # command: ["echo $CADDY_PATH","caddy","run","--config","$CADDY_PATH","--adapter","caddyfile"]
       env:
         - name: CADDY_PATH
           valueFrom:
@@ -55,8 +54,6 @@ spec:
       port: 8080
       targetPort: http-port
   type: NodePort
-
----
 # set type: LoadBalancer & start minikube tunnel
 
 # if set NodePort minikube service caddy-service get url
