@@ -7,11 +7,10 @@ on:
       - reopened
     branches:
       - main
-    
 jobs:
-    validate-yaml:
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v2
-          - name: Validate YAML file
-            run: yamllint . 
+  validate-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Validate YAML file
+        run: yamllint . 

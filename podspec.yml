@@ -55,6 +55,8 @@ spec:
       port: 8080
       targetPort: http-port
   type: NodePort
+
+---
 # set type: LoadBalancer & start minikube tunnel
 
 # if set NodePort minikube service caddy-service get url
