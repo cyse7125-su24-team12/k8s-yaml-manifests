@@ -3,7 +3,11 @@ pipeline{
     tools { 
         nodejs 'Node 20' 
     }
-     stages {
+    environment {
+    CURRENT_VERSION = currentVersion()
+    NEXT_VERSION = nextVersion()
+    }
+    stages {
         stage('Setup Commitlint') {
             steps {
                 sh """
@@ -52,9 +56,8 @@ pipeline{
         }
         stage('Get next version of the application '){
             steps{
+
                 sh '''
-                CURRENT_VERSION = currentVersion()
-                NEXT_VERSION = nextVersion()
                 echo "Current version: $CURRENT_VERSION"
                 echo "Next version: $NEXT_VERSION"
                 '''
@@ -75,4 +78,4 @@ pipeline{
             // Actions to handle failure, e.g., notify, mark build as unstable
         }
     }
- }
+}
