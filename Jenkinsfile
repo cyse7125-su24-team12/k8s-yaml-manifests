@@ -4,15 +4,15 @@
         nodejs 'Node 20' 
     }
      stages {
-        stage('Checkout') {
-          steps {
-            checkout([$class: 'GitSCM', 
-                branches: [[name: '*/main']],
-                extensions: [[$class: 'CleanCheckout']],
-                userRemoteConfigs: [[url: "https://github.com/cyse7125-su24-team12/static-site.git", credentialsId: 'shyam-github-credentials']]
-                ])
-            }
-        }
+        // stage('Checkout') {
+        //   steps {
+        //     checkout([$class: 'GitSCM', 
+        //         // branches: [[name: '*/main']],
+        //         extensions: [[$class: 'CleanCheckout']],
+        //         userRemoteConfigs: [[url: "https://github.com/cyse7125-su24-team12/static-site.git", credentialsId: 'shyam-github-credentials']]
+        //         ])
+        //     }
+        // }
         stage('Shell test'){
             steps{
                 sh '''
