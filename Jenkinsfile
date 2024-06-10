@@ -4,7 +4,14 @@ pipeline{
         nodejs 'Node 20' 
     }
      stages {
-
+        stage('Setup Commitlint') {
+            steps {
+                sh """
+                    npm install -g @commitlint/cli @commitlint/config-conventional
+                    echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
+                """
+            }
+        }
         stage('Shell test'){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'github-credential-shyam', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
@@ -31,22 +38,19 @@ pipeline{
                     # Make an authenticated API request to get the commits
                     COMMITS=$(curl -s -H "Authorization: token $GIT_PASSWORD" "$API_URL")
 
-                    # Loop through the commits and echo the commit messages
+                    # Parse and lint each commit message
                     echo "$COMMITS" | jq -r '.[] | .commit.message' | while read COMMIT_MESSAGE; do
-                        echo "Commit Message: $COMMIT_MESSAGE"
+                        echo "$COMMIT_MESSAGE" | npx commitlint
+                        if [ $? -ne 0 ]; then
+                            echo "Commit message linting failed."
+                            exit 1
+                        fi
                     done
                     '''                
                 }
             }
         }
-        // stage('Setup Commitlint') {
-        //     steps {
-        //         sh """
-        //             npm install -g @commitlint/cli @commitlint/config-conventional
-        //             echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
-        //         """
-        //     }
-        // }
+
         // stage('Fetch and Lint Commit Messages') {
         //     steps {
         //         script {
