@@ -14,19 +14,26 @@
         //     }
         // }
         stage('Shell test'){
-            steps{
+            withCredentials([usernamePassword(credentialsId: 'shyam-github-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                // available as an env variable, but will be masked if you try to print it out any which way
+                // note: single quotes prevent Groovy interpolation; expansion is by Bourne Shell, which is what you want
+                sh 'echo $PASSWORD'
+                // also available as a Groovy variable
+                echo USERNAME
+                // or inside double quotes for string interpolation
+                echo "username is $USERNAME"
                 sh '''
                 node --version 
                 echo " source branch: $CHANGE_BRANCH"
                 echo " target branch: $CHANGE_TARGET"
                 echo " url: $CHANGE_URL"
-                git log --pretty=format:'%s'
-                git fetch origin 
+                #git log --pretty=format:'%s'
+                #git fetch origin 
                 # Find the fork point (common ancestor)
-                fork_point=$(git merge-base $CHANGE_BRANCH $CHANGE_TARGET)
+                #fork_point=$(git merge-base $CHANGE_BRANCH $CHANGE_TARGET)
 
                 # Show commits from the fork point up to the head of the feature branch
-                git log --oneline $fork_point..$CHANGE_BRANCH
+                #git log --oneline $fork_point..$CHANGE_BRANCH
 
                 '''                
             }
