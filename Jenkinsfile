@@ -24,6 +24,17 @@ pipeline{
                     echo "Owner: $OWNER"
                     echo "Repository: $REPO"
                     echo "Pull Request Number: $PR_NUMBER"
+
+                    # GitHub API endpoint to get commits from a specific pull request
+                    API_URL="https://api.github.com/repos/$OWNER/$REPO/pulls/$PR_NUMBER/commits"
+
+                    # Make an authenticated API request to get the commits
+                    COMMITS=$(curl -s -H "Authorization: token $GIT_PASSWORD" "$API_URL")
+
+                    # Loop through the commits and echo the commit messages
+                    echo "$COMMITS" | jq -r '.[] | .commit.message' | while read COMMIT_MESSAGE; do
+                        echo "Commit Message: $COMMIT_MESSAGE"
+                    done
                     '''                
                 }
             }
