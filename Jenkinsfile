@@ -17,46 +17,48 @@
             steps{
                 sh '''
                 node --version 
-                echo " target branch: $CHANGE_BRANCH"
-                echo " source branch: $BRANCH_NAME"
-                echo " change branch: $CHANGE_TARGET"
+                echo " source branch: $CHANGE_BRANCH"
+                echo " target branch: $CHANGE_TARGET"
+                git remote -v 
+                
+
                 '''                
             }
         }
-        stage('Setup Commitlint') {
-            steps {
-                sh """
-                    npm install -g @commitlint/cli @commitlint/config-conventional
-                    echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
-                """
-            }
-        }
+        // stage('Setup Commitlint') {
+        //     steps {
+        //         sh """
+        //             npm install -g @commitlint/cli @commitlint/config-conventional
+        //             echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
+        //         """
+        //     }
+        // }
 
-        stage('Fetch and Lint Commit Messages') {
-            steps {
-                script {
-                    // Fetching all commit messages from the current branch
-                    def commitMessages = sh(script: "git log --pretty=format:'%s'", returnStdout: true).trim()
+        // stage('Fetch and Lint Commit Messages') {
+        //     steps {
+        //         script {
+        //             // Fetching all commit messages from the current branch
+        //             def commitMessages = sh(script: "git log --pretty=format:'%s'", returnStdout: true).trim()
 
-                    // Splitting commit messages into a list for individual processing
-                    def messageList = commitMessages.tokenize('\n')
+        //             // Splitting commit messages into a list for individual processing
+        //             def messageList = commitMessages.tokenize('\n')
 
-                    // Iterate over each commit message and perform linting
-                    messageList.each { message ->
-                        writeFile file: 'temp_message.txt', text: message
-                        // Perform commitlint check on each message
-                        try {
-                            sh 'commitlint < temp_message.txt'
-                            echo "Commit message '${message}' passed linting."
-                        } catch (Exception e) {
-                            echo "Commit message '${message}' failed linting."
-                            // Optionally, you can handle failures, e.g., by failing the build
-                            // currentBuild.result = 'FAILURE'
-                        }
-                    }
-                }
-            }
-        }
+        //             // Iterate over each commit message and perform linting
+        //             messageList.each { message ->
+        //                 writeFile file: 'temp_message.txt', text: message
+        //                 // Perform commitlint check on each message
+        //                 try {
+        //                     sh 'commitlint < temp_message.txt'
+        //                     echo "Commit message '${message}' passed linting."
+        //                 } catch (Exception e) {
+        //                     echo "Commit message '${message}' failed linting."
+        //                     // Optionally, you can handle failures, e.g., by failing the build
+        //                     // currentBuild.result = 'FAILURE'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
     post {
         always {
