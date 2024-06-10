@@ -4,25 +4,10 @@
         nodejs 'Node 20' 
     }
      stages {
-        // stage('Checkout') {
-        //   steps {
-        //     checkout([$class: 'GitSCM', 
-        //         // branches: [[name: '*/main']],
-        //         extensions: [[$class: 'CleanCheckout']],
-        //         userRemoteConfigs: [[url: "https://github.com/cyse7125-su24-team12/static-site.git", credentialsId: 'shyam-github-credentials']]
-        //         ])
-        //     }
-        // }
+
         stage('Shell test'){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'shyam-github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                    // available as an env variable, but will be masked if you try to print it out any which way
-                    // note: single quotes prevent Groovy interpolation; expansion is by Bourne Shell, which is what you want
-                    sh 'echo $GIT_PASSWORD'
-                    // also available as a Groovy variable
-                    // echo USERNAME
-                    // or inside double quotes for string interpolation
-                    echo "username is $GIT_PASSWORD"
                     sh '''
                     node --version 
                     echo " source branch: $CHANGE_BRANCH"
@@ -40,7 +25,6 @@
         //         """
         //     }
         // }
-
         // stage('Fetch and Lint Commit Messages') {
         //     steps {
         //         script {
@@ -65,7 +49,7 @@
         //             }
         //         }
         //     }
-        // }
+        }
     }
     post {
         always {
