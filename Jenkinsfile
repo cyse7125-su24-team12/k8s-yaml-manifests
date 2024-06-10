@@ -70,8 +70,6 @@ pipeline{
                 sh '''
                 echo "Current version: $CURRENT_VERSION"
                 echo "Next version: $NEXT_VERSION"
-                echo "Latest tag:"
-                git describe --tags --abbrev=0 
                 '''
             }
         }
