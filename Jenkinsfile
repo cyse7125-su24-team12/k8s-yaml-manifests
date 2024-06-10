@@ -28,10 +28,11 @@
                     echo " source branch: $CHANGE_BRANCH"
                     echo " target branch: $CHANGE_TARGET"
                     echo " url: $CHANGE_URL"
-                    git config --global user.name $USERNAME
-                    git config --global user.password $PASSWORD
+                    git config --global credential.helper '!f() { echo username=\\\$USERNAME; echo password=\\\$PASSWORD; }; f'
                     git fetch origin
-                    git checkout $CHANGE_BRANCH
+                    git checkout source-branch
+                    git fetch origin feature-branch:feature-branch
+                    git log --oneline origin/source-branch..feature-branch
 
                     '''                
                 }
