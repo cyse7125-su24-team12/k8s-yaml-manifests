@@ -33,20 +33,28 @@
         stage('Fetch and Lint Commit Messages') {
             steps {
                 script {
-                    // Fetch all commit messages from the current branch
-                    def commitMessages = sh(script: "git log --pretty=format:'%H %s'", returnStdout: true).trim()
-                    def commits = commitMessages.tokenize('\n')
+                    // Fetching all commit messages from the current branch
+                    def commitMessages = sh(script: "git log --pretty=format:'%s'", returnStdout: true).trim()
 
-                    // Lint each commit message
-                    commits.each { commit ->
-                        def hash = commit.split()[0]
-                        def message = commit.substring(commit.indexOf(' ') + 1)
+                    // Splitting commit messages into a list for individual processing
+                    def messageList = commitMessages.tokenize('\n')
+
+                    // Iterate over each commit message and perform linting
+                    messageList.each { message ->
                         writeFile file: 'temp_message.txt', text: message
-                        echo "Linting commit: $hash"
-                        sh 'commitlint < temp_message.txt' // Run commitlint on each message
+                        // Perform commitlint check on each message
+                        try {
+                            sh 'commitlint < temp_message.txt'
+                            echo "Commit message '${message}' passed linting."
+                        } catch (Exception e) {
+                            echo "Commit message '${message}' failed linting."
+                            // Optionally, you can handle failures, e.g., by failing the build
+                            // currentBuild.result = 'FAILURE'
+                        }
                     }
                 }
             }
+        }
         }
     }
     post {
