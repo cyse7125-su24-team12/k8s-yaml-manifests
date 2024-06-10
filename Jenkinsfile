@@ -21,6 +21,12 @@
                 echo " target branch: $CHANGE_TARGET"
                 echo " url: $CHANGE_URL"
                 git log --pretty=format:'%s'
+                # Find the fork point (common ancestor)
+                fork_point=$(git merge-base $CHANGE_BRANCH $CHANGE_TARGET)
+
+                # Show commits from the fork point up to the head of the feature branch
+                git log --oneline $fork_point..$CHANGE_BRANCH
+
                 '''                
             }
         }
