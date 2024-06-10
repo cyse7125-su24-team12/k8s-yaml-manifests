@@ -50,32 +50,16 @@ pipeline{
                 }
             }
         }
-
-        // stage('Fetch and Lint Commit Messages') {
-        //     steps {
-        //         script {
-        //             // Fetching all commit messages from the current branch
-        //             def commitMessages = sh(script: "git log --pretty=format:'%s'", returnStdout: true).trim()
-
-        //             // Splitting commit messages into a list for individual processing
-        //             def messageList = commitMessages.tokenize('\n')
-
-        //             // Iterate over each commit message and perform linting
-        //             messageList.each { message ->
-        //                 writeFile file: 'temp_message.txt', text: message
-        //                 // Perform commitlint check on each message
-        //                 try {
-        //                     sh 'commitlint < temp_message.txt'
-        //                     echo "Commit message '${message}' passed linting."
-        //                 } catch (Exception e) {
-        //                     echo "Commit message '${message}' failed linting."
-        //                     // Optionally, you can handle failures, e.g., by failing the build
-        //                     // currentBuild.result = 'FAILURE'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Get next version of the application '){
+            steps{
+                sh '''
+                CURRENT_VERSION = currentVersion()
+                NEXT_VERSION = nextVersion()
+                echo "Current version: $CURRENT_VERSION"
+                echo "Next version: $NEXT_VERSION"
+                '''
+            }
+        }
     }
     post {
         always {
