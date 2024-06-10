@@ -30,20 +30,20 @@
             }
         }
 
-        stage('Lint All Commits') {
+        stage('Fetch and Lint Commit Messages') {
             steps {
                 script {
-                    // Get all commit hashes since last successful build
-                    def commitHashes = sh(script: "git rev-list HEAD ^last_successful_build --no-merges", returnStdout: true).trim()
-                    // Split the output into an array of commit hashes
-                    def commits = commitHashes.tokenize()
+                    // Fetch all commit messages from the current branch
+                    def commitMessages = sh(script: "git log --pretty=format:'%H %s'", returnStdout: true).trim()
+                    def commits = commitMessages.tokenize('\n')
 
-                    // Iterate over each commit and lint the commit message
+                    // Lint each commit message
                     commits.each { commit ->
-                        def commitMessage = sh(script: "git log -1 --format=%B ${commit}", returnStdout: true).trim()
-                        echo "Commit message: ${commitMessage}" // Echo each commit message
-                        writeFile file: 'temp_commit_message.txt', text: commitMessage
-                        sh 'commitlint < temp_commit_message.txt' // Lint each commit message
+                        def hash = commit.split()[0]
+                        def message = commit.substring(commit.indexOf(' ') + 1)
+                        writeFile file: 'temp_message.txt', text: message
+                        echo "Linting commit: $hash"
+                        sh 'commitlint < temp_message.txt' // Run commitlint on each message
                     }
                 }
             }
