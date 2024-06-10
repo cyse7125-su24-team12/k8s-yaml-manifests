@@ -20,7 +20,7 @@
                 echo " source branch: $CHANGE_BRANCH"
                 echo " target branch: $CHANGE_TARGET"
                 echo " url: $CHANGE_URL"
-
+                git log --pretty=format:'%s'
                 '''                
             }
         }
