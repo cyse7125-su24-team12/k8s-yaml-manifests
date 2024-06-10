@@ -55,7 +55,6 @@
                 }
             }
         }
-        }
     }
     post {
         always {
