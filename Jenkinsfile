@@ -15,7 +15,7 @@
         // }
         stage('Shell test'){
             steps{
-                withCredentials([usernamePassword(credentialsId: 'shyam-github-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'shyam-github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     // available as an env variable, but will be masked if you try to print it out any which way
                     // note: single quotes prevent Groovy interpolation; expansion is by Bourne Shell, which is what you want
                     sh 'echo $PASSWORD'
@@ -28,12 +28,6 @@
                     echo " source branch: $CHANGE_BRANCH"
                     echo " target branch: $CHANGE_TARGET"
                     echo " url: $CHANGE_URL"
-                    git config --global credential.helper '!f() { echo username=\\\$USERNAME; echo password=\\\$PASSWORD; }; f'
-                    git fetch origin
-                    git checkout source-branch
-                    git fetch origin feature-branch:feature-branch
-                    git log --oneline origin/source-branch..feature-branch
-
                     '''                
                 }
             }
