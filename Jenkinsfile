@@ -19,6 +19,7 @@
                 node --version 
                 echo " target branch: $CHANGE_BRANCH"
                 echo " source branch: $BRANCH_NAME"
+                echo " change branch: $CHANGE_TARGET"
                 '''                
             }
         }
