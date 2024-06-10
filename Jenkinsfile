@@ -19,9 +19,7 @@
                 node --version 
                 echo " source branch: $CHANGE_BRANCH"
                 echo " target branch: $CHANGE_TARGET"
-                git remote -v 
-                merge_base = $(git merge-base origin/$CHANGE_BRANCH origin/$CHANGE_TARGET)
-                git log --format="%s" $merge_base..origin/$CHANGE_BRANCH
+                echo " url: $CHANGE_URL"
 
                 '''                
             }
