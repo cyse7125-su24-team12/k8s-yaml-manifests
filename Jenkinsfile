@@ -79,7 +79,7 @@ pipeline{
             echo 'Cleaning up...'
         }
         success {
-            echo 'Commit message follows conventional commit standards.'
+            echo 'Commit message follows conventional commit standards , fix your commits & push again.'
         }
         failure {
             echo 'Commit message does not follow conventional commit standards.'
