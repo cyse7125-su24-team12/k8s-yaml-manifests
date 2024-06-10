@@ -59,6 +59,7 @@
     post {
         always {
             echo 'Cleaning up...'
+            sh 'rm -f temp_message.txt'
             // Perform any necessary cleanup tasks
         }
         success {
