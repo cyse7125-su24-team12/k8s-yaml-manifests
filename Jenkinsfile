@@ -7,7 +7,7 @@ pipeline{
 
         stage('Shell test'){
             steps{
-                withCredentials([usernamePassword(credentialsId: 'shyam-github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'github-credential-shyam', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     sh '''
                     node --version 
                     echo " source branch: $CHANGE_BRANCH"
