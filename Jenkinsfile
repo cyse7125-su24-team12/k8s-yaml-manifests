@@ -13,6 +13,11 @@ pipeline{
                     echo " source branch: $CHANGE_BRANCH"
                     echo " target branch: $CHANGE_TARGET"
                     echo " url: $CHANGE_URL"
+                    # Extract the pull request number from the CHANGE_URL
+                    PR_NUMBER=$(echo "$CHANGE_URL" | grep -oP 'pull/\\K\\d+')
+                    PR_NUMBER_V2=$(echo "$CHANGE_URL" | sed 's|.*/pull/\\([0-9]*\\).*|\\1|')
+                    echo "PR_NUMBER: $PR_NUMBER"    
+                    echo "PR_NUMBER_V2: $PR_NUMBER_V2"     
                     '''                
                 }
             }
