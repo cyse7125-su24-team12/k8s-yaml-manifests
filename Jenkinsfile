@@ -21,39 +21,30 @@
                 '''                
             }
         }
-        stage('Fetch Latest Commit Message') {
+        stage('Setup Commitlint') {
             steps {
-                script {
-                    // Fetch the latest commit message
-                    env.LATEST_COMMIT_MESSAGE = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
-                    echo "Latest commit message: ${env.LATEST_COMMIT_MESSAGE}"
-                }
+                sh """
+                    npm install -g @commitlint/cli @commitlint/config-conventional
+                    echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
+                """
             }
         }
-        stage('Setup commitlint') {
-            steps {
-                script {
-                    // Install commitlint CLI and conventional config
-                    sh 'npm install --save-dev @commitlint/cli @commitlint/config-conventional'
-                    // Create a commitlint configuration file
-                    writeFile file: 'commitlint.config.js', text: """
-                        module.exports = {extends: ['@commitlint/config-conventional']};
-                    """
-                }
-            }
-        }
-        stage('Check Latest Commit Message') {
-            steps {
-                script {
-                    // Fetch the latest commit message
-                    def latestCommitMessage = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
-                    writeFile file: 'latest_commit_message.txt', text: latestCommitMessage
 
-                    // Lint the latest commit message
-                    sh '''
-                        # Use npx to run commitlint on the latest commit message
-                        npx commitlint < latest_commit_message.txt
-                    '''
+        stage('Lint All Commits') {
+            steps {
+                script {
+                    // Get all commit hashes since last successful build
+                    def commitHashes = sh(script: "git rev-list HEAD ^last_successful_build --no-merges", returnStdout: true).trim()
+                    // Split the output into an array of commit hashes
+                    def commits = commitHashes.tokenize()
+
+                    // Iterate over each commit and lint the commit message
+                    commits.each { commit ->
+                        def commitMessage = sh(script: "git log -1 --format=%B ${commit}", returnStdout: true).trim()
+                        echo "Commit message: ${commitMessage}" // Echo each commit message
+                        writeFile file: 'temp_commit_message.txt', text: commitMessage
+                        sh 'commitlint < temp_commit_message.txt' // Lint each commit message
+                    }
                 }
             }
         }
