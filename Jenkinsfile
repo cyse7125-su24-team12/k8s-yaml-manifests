@@ -21,6 +21,7 @@
                 echo " target branch: $CHANGE_TARGET"
                 echo " url: $CHANGE_URL"
                 git log --pretty=format:'%s'
+                git fetch origin 
                 # Find the fork point (common ancestor)
                 fork_point=$(git merge-base $CHANGE_BRANCH $CHANGE_TARGET)
 
