@@ -16,8 +16,9 @@
         stage('Shell test'){
             steps{
                 sh '''
-                pwd 
                 node --version 
+                echo " target branch: $CHANGE_BRANCH"
+                echo " source branch: $BRANCH_NAME"
                 '''                
             }
         }
