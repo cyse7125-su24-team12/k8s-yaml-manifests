@@ -8,6 +8,23 @@ pipeline {
         NEXT_VERSION = nextVersion()
     }
     stages {
+        stage('Checkout') {
+                    steps {
+                        checkout([$class: 'GitSCM',
+                            branches: [[name: '*/main']],
+                            extensions: [[$class: 'CleanCheckout']],
+                            userRemoteConfigs: [[url: 'https://github.com/cyse7125-su24-team12/k8s-yaml-manifests.git', credentialsId: 'git-credentials-id']]
+                        ])
+                    }
+        }
+        stage('Validate YAML file') {
+            steps {
+                script {
+                    sh 'sudo apt-get update && sudo apt-get install -y yamllint'
+                    sh 'yamllint .'
+                }
+            }
+        }
         stage('Setup Commitlint') {
             steps {
                 sh """
@@ -71,23 +88,6 @@ pipeline {
                 echo "Current version: $CURRENT_VERSION"
                 echo "Next version: $NEXT_VERSION"
                 '''
-            }
-        }
-        stage('Checkout') {
-                    steps {
-                        checkout([$class: 'GitSCM',
-                            branches: [[name: '*/main']],
-                            extensions: [[$class: 'CleanCheckout']],
-                            userRemoteConfigs: [[url: 'https://github.com/cyse7125-su24-team12/k8s-yaml-manifests.git', credentialsId: 'git-credentials-id']]
-                        ])
-                    }
-        }
-        stage('Validate YAML file') {
-            steps {
-                script {
-                    sh 'sudo apt-get update && sudo apt-get install -y yamllint'
-                    sh 'yamllint .'
-                }
             }
         }
     }
