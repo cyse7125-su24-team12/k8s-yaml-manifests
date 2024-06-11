@@ -29,7 +29,7 @@ pipeline {
         }
         stage('Lint commit messages') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'github-credential-shyam', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'git-credentials-id', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     sh '''
                     node --version
                     echo " source branch: $CHANGE_BRANCH"
