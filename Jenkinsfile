@@ -1,11 +1,11 @@
-pipeline{
-    agent any 
-    tools { 
-        nodejs 'Node 20' 
+pipeline {
+    agent any
+    tools {
+        nodejs 'Node 20'
     }
     environment {
-    CURRENT_VERSION = currentVersion()
-    NEXT_VERSION = nextVersion()
+        CURRENT_VERSION = currentVersion()
+        NEXT_VERSION = nextVersion()
     }
     stages {
         stage('Setup Commitlint') {
@@ -27,11 +27,11 @@ pipeline{
                 """
             }
         }
-        stage('Lint commit messages'){
-            steps{
+        stage('Lint commit messages') {
+            steps {
                 withCredentials([usernamePassword(credentialsId: 'github-credential-shyam', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     sh '''
-                    node --version 
+                    node --version
                     echo " source branch: $CHANGE_BRANCH"
                     echo " target branch: $CHANGE_TARGET"
                     echo " url: $CHANGE_URL"
@@ -41,7 +41,7 @@ pipeline{
                     REPO=$(echo "$CHANGE_URL" | sed 's|https://github.com/\\([^/]*\\)/\\([^/]*\\)/pull/.*|\\2|')
 
                     # Extract the pull request number from the CHANGE_URL
-                    PR_NUMBER=$(echo "$CHANGE_URL" | sed 's|.*/pull/\\([0-9]*\\).*|\\1|')   
+                    PR_NUMBER=$(echo "$CHANGE_URL" | sed 's|.*/pull/\\([0-9]*\\).*|\\1|')
 
                     echo "Owner: $OWNER"
                     echo "Repository: $REPO"
@@ -61,16 +61,32 @@ pipeline{
                             exit 1
                         fi
                     done
-                    '''                
+                    '''
                 }
             }
         }
-        stage('Get next version of the application '){
-            steps{
+        stage('Get next version of the application ') {
+            steps {
                 sh '''
                 echo "Current version: $CURRENT_VERSION"
                 echo "Next version: $NEXT_VERSION"
                 '''
+            }
+        }
+        stage('Checkout') {
+                    steps {
+                        checkout([$class: 'GitSCM',
+                            branches: [[name: '*/main']],
+                            extensions: [[$class: 'CleanCheckout']],
+                            userRemoteConfigs: [[url: 'https://github.com/cyse7125-su24-team12/k8s-yaml-manifests.git', credentialsId: 'git-credentials-id']]
+                        ])
+                    }
+        }
+        stage('Validate YAML file') {
+            steps {
+                script {
+                    sh 'yamllint .'
+                }
             }
         }
     }
@@ -79,11 +95,11 @@ pipeline{
             echo 'Cleaning up...'
         }
         success {
-            echo 'Commit message follows conventional commit standards , fix your commits & push again.'
+            echo 'Build Succeeded'
         }
         failure {
-            echo 'Commit message does not follow conventional commit standards.'
-            // Actions to handle failure, e.g., notify, mark build as unstable
+            echo 'Build Failed'
+        // Actions to handle failure, e.g., notify, mark build as unstable
         }
     }
 }
