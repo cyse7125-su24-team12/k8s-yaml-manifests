@@ -96,7 +96,7 @@ pipeline {
             echo 'Cleaning up...'
         }
         success {
-            echo 'Build Succeeded'
+            echo 'Build Succeeded for the commit message linting and yaml file validation.'
         }
         failure {
             echo 'Build Failed'
