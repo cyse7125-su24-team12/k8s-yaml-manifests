@@ -6,7 +6,6 @@ Objects required for k8 used :
 3. Pods 
 4. Services 
 
-
 # Steps to create a object in k8: 
 
 1.  Clone all the files from the repository
