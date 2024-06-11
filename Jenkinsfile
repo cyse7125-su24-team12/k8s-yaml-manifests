@@ -20,8 +20,11 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'YAML validation process completed.'
+        success {
+            echo 'YAML file validation is success'
+        }
+        failure {
+            echo 'YAML file validation is failure'
         }
     }
 }
