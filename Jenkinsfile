@@ -85,6 +85,7 @@ pipeline {
         stage('Validate YAML file') {
             steps {
                 script {
+                    sh 'sudo apt-get update && sudo apt-get install -y yamllint'
                     sh 'yamllint .'
                 }
             }
