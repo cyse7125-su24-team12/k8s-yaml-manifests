@@ -9,6 +9,7 @@ Objects required for k8 used :
 
 # Steps to create a object in k8: 
 
+
 1.  Clone all the files from the repository
 2.  kubeclt apply -f . 
 3.  Adding conventional commit checker & status checks in the repository.
